@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Authors>John Cook</Authors>
+    <Product>EditableCMD</Product>
+    <Version>0.1.0</Version>
+    <NeutralLanguage>en-US</NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="EditableCMDLibrary">
+      <HintPath>..\..\EditableCMDLibrary\EditableCMDLibrary\bin\Release\net5.0\EditableCMDLibrary.dll</HintPath>
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </Reference>
+  </ItemGroup>
+
+</Project>
