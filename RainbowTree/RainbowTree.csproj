@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Authors>John Cook</Authors>
+    <Product>EditableCMD</Product>
+    <Version>0.1.0</Version>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EditableCMDLibrary">
+      <HintPath>..\..\EditableCMDLibrary\EditableCMDLibrary\bin\Release\net5.0\EditableCMDLibrary.dll</HintPath>
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </Reference>
+  </ItemGroup>
+
+</Project>

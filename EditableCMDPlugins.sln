@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RickRoll", "RickRoll\RickRo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netstats", "Netstats\Netstats.csproj", "{FFB1565D-BF4D-431D-A817-C64DE276B109}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RainbowTree", "RainbowTree\RainbowTree.csproj", "{96A674D3-038A-4238-8EC2-26341BFDFA61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{FFB1565D-BF4D-431D-A817-C64DE276B109}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFB1565D-BF4D-431D-A817-C64DE276B109}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFB1565D-BF4D-431D-A817-C64DE276B109}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96A674D3-038A-4238-8EC2-26341BFDFA61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96A674D3-038A-4238-8EC2-26341BFDFA61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96A674D3-038A-4238-8EC2-26341BFDFA61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96A674D3-038A-4238-8EC2-26341BFDFA61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

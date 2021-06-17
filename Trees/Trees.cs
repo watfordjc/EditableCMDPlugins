@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Text.RegularExpressions;
+using Trees;
 using uk.JohnCook.dotnet.EditableCMDLibrary.Commands;
 using uk.JohnCook.dotnet.EditableCMDLibrary.ConsoleSessions;
 using uk.JohnCook.dotnet.EditableCMDLibrary.Interop;
