@@ -275,7 +275,9 @@ namespace RainbowTree
             cancellationTokenSource.Cancel();
             // Stop (abort) the CommandPrompt thread/process
             commandPrompt.Stop();
-            // Let Ctrl+C bubble up - a CommandPrompt
+            // Let Ctrl+C bubble up
+            //  - CommandPrompt instances set CmdRunning=false if they complete execution.
+            //  - ConsoleState.ConsoleCancelEventHandler sets CmdRunning=false after printing the new prompt.
             e.Cancel = false;
         }
     }
