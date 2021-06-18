@@ -4,7 +4,7 @@ Sample plugins for [watfordjc/**EditableCMD**](https://github.com/watfordjc/Edit
 
 ## Sample Plugins
 
-This repository contains a solution that contains several sample plugin projects created using the [watfordjc/**EdibleCMD_Plugin_Template**](https://github.com/watfordjc/EdibleCMD_Plugin_Template) Visual Studio project template.
+This repository contains a solution that contains several sample plugin projects created using the [watfordjc/**EditableCMD_Plugin_Template**](https://github.com/watfordjc/EditableCMD_Plugin_Template) Visual Studio project template.
 
 ### Netstats
 
