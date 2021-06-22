@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31402.337
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trees", "Trees\Trees.csproj", "{79E7DF18-41E1-4287-8325-25B576D028F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trees", "Trees\Trees.csproj", "{79E7DF18-41E1-4287-8325-25B576D028F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RickRoll", "RickRoll\RickRoll.csproj", "{E7543C73-2AAA-4F4C-887F-5F7784AD2547}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RickRoll", "RickRoll\RickRoll.csproj", "{E7543C73-2AAA-4F4C-887F-5F7784AD2547}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netstats", "Netstats\Netstats.csproj", "{FFB1565D-BF4D-431D-A817-C64DE276B109}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netstats", "Netstats\Netstats.csproj", "{FFB1565D-BF4D-431D-A817-C64DE276B109}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RainbowTree", "RainbowTree\RainbowTree.csproj", "{96A674D3-038A-4238-8EC2-26341BFDFA61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RainbowTree", "RainbowTree\RainbowTree.csproj", "{96A674D3-038A-4238-8EC2-26341BFDFA61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
