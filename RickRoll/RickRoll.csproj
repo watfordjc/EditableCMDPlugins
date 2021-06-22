@@ -6,13 +6,25 @@
     <Product>EditableCMD</Product>
     <Version>0.1.0</Version>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <Copyright>© John Cook 2021.</Copyright>
     <Description>Handles command RICKROLL - opens a YouTube video in default browser.</Description>
   </PropertyGroup>
 
   <ItemGroup>
     <Reference Include="EditableCMDLibrary">
-      <HintPath>..\..\EditableCMDLibrary\EditableCMDLibrary\bin\Release\net5.0\EditableCMDLibrary.dll</HintPath>
+      <!-- Current Solution-->
+      <HintPath Condition="'$(Configuration)' == 'Release' And Exists('..\EditableCMDLibrary\EditableCMDLibrary\bin\Release\net5.0\')">..\EditableCMDLibrary\EditableCMDLibrary\bin\Release\net5.0\EditableCMDLibrary.dll</HintPath>
+      <HintPath Condition="'$(Configuration)' == 'Debug' And Exists('..\EditableCMDLibrary\EditableCMDLibrary\bin\Debug\net5.0\')">..\EditableCMDLibrary\EditableCMDLibrary\bin\Debug\net5.0\EditableCMDLibrary.dll</HintPath>
+      <!-- Library Solution-->
+      <HintPath Condition="'$(Configuration)' == 'Release' And Exists('..\..\EditableCMDLibrary\EditableCMDLibrary\bin\Release\net5.0\')">..\..\EditableCMDLibrary\EditableCMDLibrary\bin\Release\net5.0\EditableCMDLibrary.dll</HintPath>
+      <HintPath Condition="'$(Configuration)' == 'Debug' And Exists('..\..\EditableCMDLibrary\EditableCMDLibrary\bin\Debug\net5.0\')">..\..\EditableCMDLibrary\EditableCMDLibrary\bin\Debug\net5.0\EditableCMDLibrary.dll</HintPath>
+      <!-- EditableCMDSanitised Solution-->
+      <HintPath Condition="'$(Configuration)' == 'Release' And Exists('..\..\EditableCMDSanitised\EditableCMDLibrary\EditableCMDLibrary\bin\Release\net5.0\')">..\..\EditableCMDSanitised\EditableCMDLibrary\EditableCMDLibrary\bin\Release\net5.0\EditableCMDLibrary.dll</HintPath>
+      <HintPath Condition="'$(Configuration)' == 'Debug' And Exists('..\..\EditableCMDSanitised\EditableCMDLibrary\EditableCMDLibrary\bin\Debug\net5.0\')">..\..\EditableCMDSanitised\EditableCMDLibrary\EditableCMDLibrary\bin\Debug\net5.0\EditableCMDLibrary.dll</HintPath>
+      <!-- EditableCMD Solution-->
+      <HintPath Condition="'$(Configuration)' == 'Release' And Exists('..\..\EditableCMD\EditableCMDLibrary\EditableCMDLibrary\bin\Release\net5.0\')">..\..\EditableCMD\EditableCMDLibrary\EditableCMDLibrary\bin\Release\net5.0\EditableCMDLibrary.dll</HintPath>
+      <HintPath Condition="'$(Configuration)' == 'Debug' And Exists('..\..\EditableCMD\EditableCMDLibrary\EditableCMDLibrary\bin\Debug\net5.0\')">..\..\EditableCMD\EditableCMDLibrary\EditableCMDLibrary\bin\Debug\net5.0\EditableCMDLibrary.dll</HintPath>
       <Private>false</Private>
       <ExcludeAssets>runtime</ExcludeAssets>
     </Reference>
