@@ -7,6 +7,7 @@
     <Version>0.1.0</Version>
     <NeutralLanguage>en-US</NeutralLanguage>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
     <Description>Handles command NETSTATS - prints something network-related.</Description>
     <Copyright>© John Cook 2021.</Copyright>
   </PropertyGroup>

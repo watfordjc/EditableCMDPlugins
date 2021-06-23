@@ -7,6 +7,7 @@
     <Version>0.1.0</Version>
     <NeutralLanguage>en-US</NeutralLanguage>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
     <Copyright>© John Cook 2021.</Copyright>
     <Description>Handles TREES command - prints some ASCII art trees.</Description>
   </PropertyGroup>
