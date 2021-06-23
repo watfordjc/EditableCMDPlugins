@@ -46,7 +46,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /E &quot;$(TargetDir)*&quot; &quot;$(ProjectDir)..\_PluginBuilds\$(Configuration)\$(ProjectName)\&quot;" />
+    <Exec Command="xcopy /E /Y &quot;$(TargetDir)*&quot; &quot;$(ProjectDir)..\_PluginBuilds\$(Configuration)\$(ProjectName)\&quot;" />
   </Target>
 
 </Project>
