@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Text.RegularExpressions;
@@ -15,77 +16,63 @@ namespace uk.JohnCook.dotnet.EditableCMD.Plugins
     public class Rickroll : ICommandInput
     {
         #region Plugin Implementation Details
-        /// <summary>
-        /// Name of the plugin.
-        /// </summary>
+        /// <inheritdoc cref="ICommandInput.Name"/>
         public string Name => "Rickroll";
-        /// <summary>
-        /// Summary of the plugin's functionality.
-        /// </summary>
+        /// <inheritdoc cref="ICommandInput.Description"/>
         public string Description => "Handles command RICKROLL - opens a YouTube video in default browser.";
-        /// <summary>
-        /// Author's name (can be <see cref="string.Empty"/>)
-        /// </summary>
+        /// <inheritdoc cref="ICommandInput.AuthorName"/>
         public string AuthorName => "John Cook";
-        /// <summary>
-        /// Author's Twitch username (can be <see cref="string.Empty"/>)
-        /// </summary>
+        /// <inheritdoc cref="ICommandInput.AuthorTwitchUsername"/>
         public string AuthorTwitchUsername => "WatfordJC";
-        /// <summary>
-        /// An array of the keys handled by the plugin. For commands, this should be <see cref="ConsoleKey.Enter"/>.
-        /// </summary>
-        public ConsoleKey[] KeysHandled => new ConsoleKey[] { ConsoleKey.Enter };
-        /// <summary>
-        /// Whether the plugin handles keys/commands input in normal mode (such as a command entered at the prompt).
-        /// </summary>
+        /// <inheritdoc cref="ICommandInput.KeysHandled"/>
+        public ConsoleKey[]? KeysHandled => new ConsoleKey[] { ConsoleKey.Enter };
+        /// <inheritdoc cref="ICommandInput.NormalModeHandled"/>
         public bool NormalModeHandled => true;
-        /// <summary>
-        /// Whether the plugin handles keys input in edit mode.
-        /// </summary>
+        /// <inheritdoc cref="ICommandInput.EditModeHandled"/>
         public bool EditModeHandled => false;
-        /// <summary>
-        /// Whether the plugin handles keys input in mark mode.
-        /// </summary>
+        /// <inheritdoc cref="ICommandInput.MarkModeHandled"/>
         public bool MarkModeHandled => false;
-        /// <summary>
-        /// An array of commands handled by the plugin, in lowercase.
-        /// </summary>
-        public string[] CommandsHandled => new string[] { "rickroll" };
+        /// <inheritdoc cref="ICommandInput.CommandsHandled"/>
+        public string[]? CommandsHandled => new string[] { "rickroll" };
         #endregion
 
         private string regexCommandString = string.Empty;
+        private ConsoleState? state;
 
-        /// <summary>
-        /// Called when adding an implementation of the interface to the list of event handlers. Approximately equivalent to a constructor.
-        /// </summary>
-        /// <param name="state">The <see cref="ConsoleState"/> for the current console session.</param>
+        /// <inheritdoc cref="ICommandInput.Init(ConsoleState)"/>
+        [MemberNotNull(nameof(state))]
         public void Init(ConsoleState state)
         {
             // Add all commands listed in CommandsHandled to the regex string for matching if this plugin handles the command.
-            if (KeysHandled.Contains(ConsoleKey.Enter) && CommandsHandled.Length > 0)
+            if (KeysHandled?.Contains(ConsoleKey.Enter) == true && CommandsHandled?.Length > 0)
             {
-                regexCommandString = string.Concat("^(", string.Join('|', CommandsHandled), ")( .*)?$");
+                regexCommandString = string.Concat("^(", string.Join('|', CommandsHandled), ")$");
             }
+            this.state = state;
         }
 
         /// <summary>
-        /// Event handler for the RICKROLL command
+        /// Event handler for the RICKROLL command.
         /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">The ConsoleKeyEventArgs for the event</param>
-        public void ProcessCommand(object sender, NativeMethods.ConsoleKeyEventArgs e)
+        /// <inheritdoc cref="ICommandInput.ProcessCommand(object?, NativeMethods.ConsoleKeyEventArgs)" path="param"/>
+        public void ProcessCommand(object? sender, NativeMethods.ConsoleKeyEventArgs e)
         {
+            // Call Init() again if state isn't set
+            if (state == null)
+            {
+                Init(e.State);
+            }
             // Return early if we're not interested in the event
             if (e.Handled || // Event has already been handled
                 !e.Key.KeyDown || // A key was not pressed
                 !(e.Key.ConsoleKey == ConsoleKey.Enter) || // The key pressed was not Enter
-                e.State.EditMode // Edit mode is enabled
+                state.EditMode // Edit mode is enabled
                 )
             {
                 return;
             }
             // If current input matches RICKROLL, we are handling the event
-            else if (!string.IsNullOrEmpty(regexCommandString) && Regex.Match(e.State.Input.Text.ToString().Trim(), regexCommandString, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant).Success)
+            else if (!string.IsNullOrEmpty(regexCommandString) && Regex.Match(state.Input.Text.ToString().Trim(), regexCommandString, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant).Success)
             {
                 e.Handled = true;
             }
@@ -96,8 +83,8 @@ namespace uk.JohnCook.dotnet.EditableCMD.Plugins
             }
 
             Console.WriteLine();
-            ConsoleOutput.WritePrompt(e.State, false);
-            CommandPrompt commandPrompt = new(e.State, "start https://www.youtube.com/watch?v=dQw4w9WgXcQ", false, false, false, false);
+            ConsoleOutput.WritePrompt(state, false);
+            CommandPrompt commandPrompt = new(state, "start https://www.youtube.com/watch?v=dQw4w9WgXcQ", false, false, false, false);
             commandPrompt.Start();
             commandPrompt.WaitForExit();
         }

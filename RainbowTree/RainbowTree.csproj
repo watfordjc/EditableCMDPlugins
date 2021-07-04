@@ -4,12 +4,13 @@
     <TargetFramework>net5.0</TargetFramework>
     <Authors>John Cook</Authors>
     <Product>EditableCMD</Product>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <NeutralLanguage>en-US</NeutralLanguage>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
     <Copyright>© John Cook 2021.</Copyright>
     <Description>Handles command RICKROLL - opens a YouTube video in default browser.</Description>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

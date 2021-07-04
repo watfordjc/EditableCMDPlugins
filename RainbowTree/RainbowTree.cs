@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
@@ -21,86 +22,70 @@ namespace RainbowTree
     public class RainbowTree : ICommandInput
     {
         #region Plugin Implementation Details
-        /// <summary>
-        /// Name of the plugin.
-        /// </summary>
+        /// <inheritdoc cref="ICommandInput.Name"/>
         public string Name => "RainbowTree";
-        /// <summary>
-        /// Summary of the plugin's functionality.
-        /// </summary>
+        /// <inheritdoc cref="ICommandInput.Description"/>
         public string Description => "Handles command RTREE, a rainbow themed TREE command with artificial lag.";
-        /// <summary>
-        /// Author's name (can be <see cref="string.Empty"/>)
-        /// </summary>
+        /// <inheritdoc cref="ICommandInput.AuthorName"/>
         public string AuthorName => "John Cook";
-        /// <summary>
-        /// Author's Twitch username (can be <see cref="string.Empty"/>)
-        /// </summary>
+        /// <inheritdoc cref="ICommandInput.AuthorTwitchUsername"/>
         public string AuthorTwitchUsername => "WatfordJC";
-        /// <summary>
-        /// An array of the keys handled by the plugin. For commands, this should be <see cref="ConsoleKey.Enter"/>.
-        /// </summary>
-        public ConsoleKey[] KeysHandled => new ConsoleKey[] { ConsoleKey.Enter };
-        /// <summary>
-        /// Whether the plugin handles keys/commands input in normal mode (such as a command entered at the prompt).
-        /// </summary>
+        /// <inheritdoc cref="ICommandInput.KeysHandled"/>
+        public ConsoleKey[]? KeysHandled => new ConsoleKey[] { ConsoleKey.Enter };
+        /// <inheritdoc cref="ICommandInput.NormalModeHandled"/>
         public bool NormalModeHandled => true;
-        /// <summary>
-        /// Whether the plugin handles keys input in edit mode.
-        /// </summary>
+        /// <inheritdoc cref="ICommandInput.EditModeHandled"/>
         public bool EditModeHandled => false;
-        /// <summary>
-        /// Whether the plugin handles keys input in mark mode.
-        /// </summary>
+        /// <inheritdoc cref="ICommandInput.MarkModeHandled"/>
         public bool MarkModeHandled => false;
-        /// <summary>
-        /// An array of commands handled by the plugin, in lowercase.
-        /// </summary>
-        public string[] CommandsHandled => new string[] { "rtree" };
+        /// <inheritdoc cref="ICommandInput.CommandsHandled"/>
+        public string[]? CommandsHandled => new string[] { "rtree" };
         #endregion
 
         private string regexCommandString = string.Empty;
-        private ConsoleState state;
-        private volatile CancellationTokenSource cancellationTokenSource;
+        private ConsoleState? state;
+        private volatile CancellationTokenSource? cancellationTokenSource;
         private volatile bool stopRunning = false;
-        private ConsoleCancelEventHandler cancelEventHandler = null;
+        private ConsoleCancelEventHandler? cancelEventHandler = null;
         private ConsoleColor originalForeground;
         private ConsoleColor originalBackground;
-        private CommandPrompt commandPrompt;
-        private Encoding previousEncoding;
+        private CommandPrompt? commandPrompt;
+        private Encoding? previousEncoding;
 
-        /// <summary>
-        /// Called when adding an implementation of the interface to the list of event handlers. Approximately equivalent to a constructor.
-        /// </summary>
-        /// <param name="state">The <see cref="ConsoleState"/> for the current console session.</param>
+        /// <inheritdoc cref="ICommandInput.Init(ConsoleState)"/>
+        [MemberNotNull(nameof(state))]
         public void Init(ConsoleState state)
         {
             // Add all commands listed in CommandsHandled to the regex string for matching if this plugin handles the command.
-            if (KeysHandled.Contains(ConsoleKey.Enter) && CommandsHandled.Length > 0)
+            if (KeysHandled?.Contains(ConsoleKey.Enter) == true && CommandsHandled?.Length > 0)
             {
-                regexCommandString = string.Concat("^(", string.Join('|', CommandsHandled), ")( .*)?$");
+                regexCommandString = string.Concat("^(", string.Join('|', CommandsHandled), ")$");
             }
             this.state = state;
         }
 
         /// <summary>
-        /// Event handler for a <see cref="KeyPress"/>, or a command <c> if (<paramref name="e"/>.Key == <see cref="ConsoleKey.Enter"/>)</c>.
+        /// Event handler for the RTREE command.
         /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">The ConsoleKeyEventArgs for the event</param>
-        public void ProcessCommand(object sender, NativeMethods.ConsoleKeyEventArgs e)
+        /// <inheritdoc cref="ICommandInput.ProcessCommand(object?, NativeMethods.ConsoleKeyEventArgs)" path="param"/>
+        public void ProcessCommand(object? sender, NativeMethods.ConsoleKeyEventArgs e)
         {
+            // Call Init() again if state isn't set
+            if (state == null)
+            {
+                Init(e.State);
+            }
             // Return early if we're not interested in the event
             if (e.Handled || // Event has already been handled
                 !e.Key.KeyDown || // A key was not pressed
-                !KeysHandled.Contains(e.Key.ConsoleKey) || // The key pressed wasn't one we handle
-                e.State.EditMode // Edit mode is enabled
+                KeysHandled?.Contains(e.Key.ConsoleKey) != true || // The key pressed wasn't one we handle
+                state.EditMode // Edit mode is enabled
                 )
             {
                 return;
             }
             // We're handling the event if these conditions are met
-            else if (!string.IsNullOrEmpty(regexCommandString) && Regex.Match(e.State.Input.Text.ToString().Trim(), regexCommandString, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant).Success)
+            else if (!string.IsNullOrEmpty(regexCommandString) && Regex.Match(state.Input.Text.ToString().Trim(), regexCommandString, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant).Success)
             {
                 e.Handled = true;
             }
@@ -111,7 +96,7 @@ namespace RainbowTree
             }
 
             // Split the command from any parameters such as TREE's /A, /F, and /?
-            string[] treeWithParams = e.State.Input.Text.ToString().Split(' ', 2);
+            string[] treeWithParams = state.Input.Text.ToString().Split(' ', 2);
 
             // Add event handler for Ctrl+C and Ctrl+Break, reset stopRunning to false
             cancelEventHandler = new ConsoleCancelEventHandler(ConsoleCancelEventHandler);
@@ -127,11 +112,11 @@ namespace RainbowTree
             previousEncoding = Console.OutputEncoding;
             // Set encoding for sub-process to code page 858 (code page 850 + Euro symbol)
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            e.State.OutputEncoding = Encoding.GetEncoding(858);
+            state.OutputEncoding = Encoding.GetEncoding(858);
             // Create a CommandPrompt instance which sets up a thread using the parameters supplied
-            commandPrompt = new(e.State, string.Format("tree{0}", treeWithParams.Length == 1 ? "" : string.Concat(" ", treeWithParams[1])), false, false, true, false);
+            commandPrompt = new(state, string.Format("tree{0}", treeWithParams.Length == 1 ? "" : string.Concat(" ", treeWithParams[1])), false, false, true, false);
             // Restore output encoding
-            e.State.OutputEncoding = previousEncoding;
+            state.OutputEncoding = previousEncoding;
             #endregion
 
             // Store the current console colours
@@ -142,7 +127,7 @@ namespace RainbowTree
             // Create timer for changing output colour - do NOT set interval too low
             bool changeColor = false;
             using System.Timers.Timer timer = new(3000);
-            void onElapsed(object sender, System.Timers.ElapsedEventArgs e)
+            void onElapsed(object? sender, System.Timers.ElapsedEventArgs e)
             {
                 changeColor = true;
             }
@@ -158,7 +143,7 @@ namespace RainbowTree
             #region Local methods for CommandPrompt events
 
             // Local function called when the process/thread is started
-            void onStart(object sender, bool started)
+            void onStart(object? sender, bool started)
             {
                 // Start colour changing timer
                 timer.Start();
@@ -166,7 +151,7 @@ namespace RainbowTree
 
             // Local method that will get called whenever CommandPrompt receives a line of output
             [MethodImpl(MethodImplOptions.Synchronized)]
-            void onNewOutput(object sender, int newLineCount)
+            void onNewOutput(object? sender, int newLineCount)
             {
                 if (stopRunning)
                 {
@@ -219,7 +204,7 @@ namespace RainbowTree
             }
 
             // Local method that will get called when CommandPrompt's thread has finished executing
-            void onComplete(object sender, bool completed)
+            void onComplete(object? sender, bool completed)
             {
                 commandPrompt.Started -= onStart;
                 commandPrompt.NewOutput -= onNewOutput;
@@ -259,7 +244,7 @@ namespace RainbowTree
                 Console.WriteLine();
             }
             // Print a new prompt for input
-            ConsoleOutput.WritePrompt(e.State, true);
+            ConsoleOutput.WritePrompt(state, true);
         }
 
         /// <summary>
@@ -268,16 +253,17 @@ namespace RainbowTree
         /// <param name="sender">sender</param>
         /// <param name="e">arguments</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        protected void ConsoleCancelEventHandler(object sender, ConsoleCancelEventArgs e)
+        protected void ConsoleCancelEventHandler(object? sender, ConsoleCancelEventArgs e)
         {
             // Stop the output dequeueing
             stopRunning = true;
-            cancellationTokenSource.Cancel();
+            cancellationTokenSource?.Cancel();
             // Stop (abort) the CommandPrompt thread/process
-            commandPrompt.Stop();
+            commandPrompt?.Stop();
+            // TODO: Determine if Thread.Yield
             // Let Ctrl+C bubble up
             //  - CommandPrompt instances set CmdRunning=false if they complete execution.
-            //  - ConsoleState.ConsoleCancelEventHandler sets CmdRunning=false after printing the new prompt.
+            //  - ConsoleOutput.WritePrompt sets CmdRunning=false after printing the new prompt.
             e.Cancel = false;
         }
     }
